@@ -2,6 +2,7 @@ package com.example.transaction2.controller;
 
 import com.example.transaction2.entity.User;
 import com.example.transaction2.payload.SignDTO;
+import com.example.transaction2.payload.SignInDTO;
 import com.example.transaction2.payload.TokenDTO;
 import com.example.transaction2.payload.VerificationDTO;
 import com.example.transaction2.response.ApiResult;
@@ -24,7 +25,7 @@ public class AuthControllerImpl implements AuthController{
     }
 
     @Override
-    public ApiResult<TokenDTO> signIn(SignDTO signDTO) {
+    public ApiResult<TokenDTO> signIn(SignInDTO signDTO) {
         return authService.signIn(signDTO);
     }
 

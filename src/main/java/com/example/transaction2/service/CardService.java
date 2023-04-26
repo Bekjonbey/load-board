@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CardService {
     private final CardRepository cardRepository;
-    private final UserRepository userRepository;
     private final ValidatorService validator;
 
     public ApiResult<CardDTO> add(CardAddDTO cardDTO, User user) {

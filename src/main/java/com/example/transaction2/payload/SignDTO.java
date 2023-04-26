@@ -14,6 +14,8 @@ public class SignDTO {
 
     @NotBlank
     private String password;
+    @NotBlank
+    private String position;
 
 
     @Override

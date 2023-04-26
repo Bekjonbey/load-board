@@ -39,4 +39,6 @@ public class Card {
     private User user;
 
     private boolean deleted;
+
+
 }

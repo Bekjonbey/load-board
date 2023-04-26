@@ -9,6 +9,7 @@ public interface RestConstants {
 
     String[] OPEN_PAGES = {
             "/*",
+            "/api/load/open-loads",
             AuthController.AUTH_CONTROLLER_BASE_PATH + "/**",
             RestConstants.BASE_PATH + "/**"
     };

@@ -2,6 +2,7 @@ package com.example.transaction2.controller;
 
 import com.example.transaction2.entity.User;
 import com.example.transaction2.payload.SignDTO;
+import com.example.transaction2.payload.SignInDTO;
 import com.example.transaction2.payload.TokenDTO;
 import com.example.transaction2.payload.VerificationDTO;
 import com.example.transaction2.response.ApiResult;
@@ -19,7 +20,7 @@ public interface AuthController {
     @PostMapping(value = SIGN_UP_PATH)
     ApiResult<VerificationDTO> signUp(@RequestBody @Valid SignDTO signDTO);
     @PostMapping(value = SIGN_IN_PATH)
-    ApiResult<TokenDTO> signIn(@Valid @RequestBody SignDTO signDTO);
+    ApiResult<TokenDTO> signIn(@Valid @RequestBody SignInDTO signDTO);
     @DeleteMapping(path = DELETE_PATH)
     ApiResult<?> delete(User user);
 

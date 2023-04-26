@@ -4,10 +4,7 @@ import com.example.transaction2.entity.Role;
 import com.example.transaction2.entity.User;
 import com.example.transaction2.entity.enums.RoleEnum;
 import com.example.transaction2.exception.RestException;
-import com.example.transaction2.payload.ErrorData;
-import com.example.transaction2.payload.SignDTO;
-import com.example.transaction2.payload.TokenDTO;
-import com.example.transaction2.payload.VerificationDTO;
+import com.example.transaction2.payload.*;
 import com.example.transaction2.repository.RoleRepository;
 import com.example.transaction2.repository.UserRepository;
 import com.example.transaction2.response.ApiResult;
@@ -61,12 +58,30 @@ public class AuthServiceImpl implements AuthService {
         user.setPhone(signDTO.getPhone());
         user.setPassword(passwordEncoder.encode(signDTO.getPassword()));
         user.setEnabled(true);
-        Role role  = roleRepository.findByName(RoleEnum.USER.name())
-                .orElseThrow(()->RestException.restThrow("ROLE_NOT_FOUND",HttpStatus.BAD_REQUEST));
-        user.setRole(role);
-
-        String verificationCode = StringHelper.generateVerificationCode();
+                String verificationCode = StringHelper.generateVerificationCode();
         user.setVerificationCode(verificationCode);
+        user.setPosition(signDTO.getPosition());
+
+        if(signDTO.getPosition().equalsIgnoreCase("USER")) {
+            Role role = roleRepository.findByName(RoleEnum.USER.name())
+                    .orElseThrow(() -> RestException.restThrow("ROLE_NOT_FOUND", HttpStatus.BAD_REQUEST));
+            user.setRole(role);
+        }
+        else if(signDTO.getPosition().equalsIgnoreCase("COMPANY")) {
+            Role role = roleRepository.findByName(RoleEnum.COMPANY.name())
+                    .orElseThrow(() -> RestException.restThrow("ROLE_NOT_FOUND", HttpStatus.BAD_REQUEST));
+            user.setRole(role);
+        }
+        else if(signDTO.getPosition().equalsIgnoreCase("ADMIN")) {
+            Role role = roleRepository.findByName(RoleEnum.ADMIN.name())
+                    .orElseThrow(() -> RestException.restThrow("ROLE_NOT_FOUND", HttpStatus.BAD_REQUEST));
+            user.setRole(role);
+        }
+        else {
+            Role role = roleRepository.findByName(RoleEnum.OTHER.name())
+                    .orElseThrow(() -> RestException.restThrow("ROLE_NOT_FOUND", HttpStatus.BAD_REQUEST));
+
+        }
         userRepository.save(user);
         System.out.println(user);
             return ApiResult.successResponse(VerificationDTO.builder().phoneNumber(user.getPhone()).verificationCode(verificationCode).build());
@@ -85,7 +100,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ApiResult<TokenDTO> signIn(SignDTO signDTO) {
+    public ApiResult<TokenDTO> signIn(SignInDTO signDTO) {
         User user;
         try {
             Authentication authentication = authenticationManager.authenticate(
