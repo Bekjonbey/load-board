@@ -34,7 +34,6 @@ public class DataLoader implements CommandLineRunner {
         if (Objects.equals("create", modeType)) {
             addRoles();
             addRates();
-            addRates();
 //            addAdmin();
         }
     }
@@ -58,6 +57,20 @@ public class DataLoader implements CommandLineRunner {
                 Role.builder()
                         .name(RoleEnum.ADMIN.name())
                         .description("Admin")
+                        .permissions(setPermissionsOfAdmin())
+                        .build()
+        );
+        roleRepository.save(
+                Role.builder()
+                        .name(RoleEnum.DRIVER.name())
+                        .description("Driver")
+                        .permissions(setPermissionsOfAdmin())
+                        .build()
+        );
+        roleRepository.save(
+                Role.builder()
+                        .name(RoleEnum.COMPANY.name())
+                        .description("Company")
                         .permissions(setPermissionsOfAdmin())
                         .build()
         );

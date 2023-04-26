@@ -9,30 +9,22 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Transaction {
+@Builder
+public class Load {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID",
-        strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID id;
-    private String senderCard;
-    private String receiverCard;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(nullable = false)
-    private Long sender_amount;
+    private String description;
     @Column(nullable = false)
-    private Long receiver_amount;
-
-    @Column(nullable = false)
-    private Long load_id;
-    @Column(nullable = false)
-    private String status;
+    private Long payment;
+    @ManyToOne(optional = false)
+    private User user;
     @CreationTimestamp
     private LocalDateTime created_at;
-
-
+    private boolean booked;
 }

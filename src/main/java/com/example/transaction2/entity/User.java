@@ -40,6 +40,10 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
+    private String position;
+
+
+    @Column(nullable = false)
     private String verificationCode;
 
     @ManyToOne(optional = false)
