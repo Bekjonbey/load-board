@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* CSS styles for the email template */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:last-child {
+      background-color: #ffd700;
+    }
+
+    td:last-child {
+      text-align: right;
+    }
+
+    strong {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<h1>Thank you for your purchase!</h1>
+<table>
+  <thead>
+  <tr>
+    <th>Product Name</th>
+    <th>Price</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- Loop through each product in the productList -->
+  <tr th:each="product : ${productList}">
+    <td th:text="${product.name}"></td>
+    <td th:text="${product.price}"></td>
+  </tr>
+  <!-- Add a row for the total amount -->
+  <tr>
+    <td><strong>Total:</strong></td>
+    <td th:text="${totalAmount}"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

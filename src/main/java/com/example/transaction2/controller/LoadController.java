@@ -8,6 +8,7 @@ import com.example.transaction2.response.ApiResult;
 import com.example.transaction2.service.LoadService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,8 @@ public class LoadController {
         return loadService.get(id);
     }
     @GetMapping("/open-loads")
-    public ApiResult<List<LoadDTO>> getOpenLoads() {
-        return loadService.getOpenLoads();
+    public ApiResult<Page<LoadDTO>> getOpenLoads(@RequestParam(defaultValue = "1") int page,
+                                                 @RequestParam(defaultValue = "6") int pageSize) {
+        return loadService.getOpenLoads(page, pageSize);
     }
 }

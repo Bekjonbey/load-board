@@ -20,7 +20,7 @@ import java.util.UUID;
 public class LoadDTO {
     private String description;
     private Long payment;
-    private UUID userId;
+    private Long loadId;
     private LocalDateTime created_at;
     private boolean booked;
 }

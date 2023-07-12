@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "phone": "+998946216666",
   "password": "Bekjon@03",
-  "position": "Company"
+  "position": "USER"
 }
 
 ###
@@ -14,7 +14,7 @@ POST http://localhost:8090/api/auth/sign-in
 Content-Type: application/json
 
 {
-  "phone": "+998946217575",
+  "phone": "+998946216666",
   "password": "Bekjon@03"
 }
 

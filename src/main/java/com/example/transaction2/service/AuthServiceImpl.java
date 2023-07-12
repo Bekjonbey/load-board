@@ -83,7 +83,6 @@ public class AuthServiceImpl implements AuthService {
 
         }
         userRepository.save(user);
-        System.out.println(user);
             return ApiResult.successResponse(VerificationDTO.builder().phoneNumber(user.getPhone()).verificationCode(verificationCode).build());
         }
 
@@ -131,7 +130,7 @@ public class AuthServiceImpl implements AuthService {
                 .refreshToken(refreshToken)
                 .build();
             return ApiResult.successResponse(
-                "SUCCESSFULLY_TOKEN_GENERATED",tokenDTO);
+                user.getRole().getName(),tokenDTO);
     }
     @Override
     public ApiResult<TokenDTO> refreshToken(String accessToken, String refreshToken) {

@@ -17,7 +17,6 @@ public class SignDTO {
     @NotBlank
     private String position;
 
-
     @Override
     public boolean equals(Object obj) {
         SignDTO other = (SignDTO) obj;

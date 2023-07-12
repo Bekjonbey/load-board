@@ -8,8 +8,9 @@ import com.example.transaction2.repository.CardRepository;
 import com.example.transaction2.repository.LoadRepository;
 import com.example.transaction2.repository.UserRepository;
 import com.example.transaction2.response.ApiResult;
-import com.example.transaction2.security.CurrentUserHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,7 @@ public class LoadService {
     }
     public ApiResult<List<LoadDTO>> getAll(User user) {
         List<Load> loads = loadRepository.findAllByUserId(user.getId());
+        System.out.println("ketdi");
         return ApiResult.successResponse(loads.stream().map(this::mapLoadToLoadDTO)
                 .collect(Collectors.toList()));
     }
@@ -53,7 +55,7 @@ public class LoadService {
     }
     private LoadDTO mapLoadToLoadDTO(Load load) {
         return LoadDTO.builder()
-                .userId(load.getUser().getId())
+                .loadId(load.getId())
                 .booked(load.isBooked())
                 .description(load.getDescription())
                 .payment(load.getPayment())
@@ -61,9 +63,15 @@ public class LoadService {
                 .build();
     }
 
-    public ApiResult<List<LoadDTO>> getOpenLoads() {
-        List<Load> allLoads = loadRepository.findAll();
-        return ApiResult.successResponse(allLoads.stream().map(this::mapLoadToLoadDTO)
-                .collect(Collectors.toList()));
-    }
+//    public ApiResult<List<LoadDTO>> getOpenLoads() {
+//        List<Load> allLoads = loadRepository.findAll();
+//        return ApiResult.successResponse(allLoads.stream().map(this::mapLoadToLoadDTO)
+//                .collect(Collectors.toList()));
+//    }
+public ApiResult<Page<LoadDTO>> getOpenLoads(int page, int pageSize) {
+    PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+    Page<Load> allLoads = loadRepository.findAll(pageRequest);
+    return ApiResult.successResponse(allLoads.map(this::mapLoadToLoadDTO));
+
+}
 }
