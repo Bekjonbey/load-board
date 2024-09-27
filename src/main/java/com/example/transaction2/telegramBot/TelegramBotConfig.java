@@ -3,6 +3,7 @@ package com.example.transaction2.telegramBot;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.ChatMemberUpdated;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -28,11 +29,28 @@ public class TelegramBotConfig extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            Long messageText = Long.valueOf(update.getMessage().getText());
-            String chatId = update.getMessage().getChatId().toString();
+            try {
+                Long userId = Long.parseLong(update.getMessage().getText());
+                String response = String.valueOf(botService.findGroupByUser(userId));
+                sendMessage(update.getMessage().getChatId().toString(), response);
+            } catch (NumberFormatException e) {
+                sendMessage(update.getMessage().getChatId().toString(), "Please enter a valid user ID.");
+            }
+        }
 
-            String response = botService.findGroupByUser(messageText);  // Search for the user
-            sendMessage(chatId, response);
+        if (update.hasMyChatMember()) {
+            ChatMemberUpdated myChatMemberUpdate = update.getMyChatMember();
+            Long groupId = myChatMemberUpdate.getChat().getId();
+            String groupName = myChatMemberUpdate.getChat().getUserName();
+            String newStatus = myChatMemberUpdate.getNewChatMember().getStatus();
+
+            Long addedByUserId = myChatMemberUpdate.getFrom().getId();
+
+            if ("member".equals(newStatus)) {
+                botService.handleBotAddedToGroup(groupId, groupName, addedByUserId);
+            } else if ("kicked".equals(newStatus) || "left".equals(newStatus)) {
+                botService.handleBotRemovedFromGroup(groupId);
+            }
         }
     }
 

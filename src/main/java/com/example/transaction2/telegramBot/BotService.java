@@ -1,59 +1,80 @@
 package com.example.transaction2.telegramBot;
 
-
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
-import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BotService {
 
     private final TelegramBotConfig botConfig;
-    private List<Long> groupIds;
+    private final GroupRepository groupRepository;
 
-    public BotService(TelegramBotConfig botConfig) {
+    public BotService(TelegramBotConfig botConfig, GroupRepository groupRepository) {
         this.botConfig = botConfig;
-        initializeGroupIds();  // Initialize group IDs when the service is created
+        this.groupRepository = groupRepository;
     }
 
-    public String findGroupByUser(Long usernameOrId) {
-        for (Long groupId : groupIds) {
+    public StringBuilder findGroupByUser(Long usernameOrId) {
+        StringBuilder result = new StringBuilder();
+        ArrayList<String> groupList = new ArrayList<>();
+        for (Map.Entry<Long, String> entry : getAllGroupIds().entrySet()) {
             try {
-                ChatMember member = botConfig.execute(new GetChatMember(groupId.toString(), usernameOrId));
+                ChatMember member = botConfig.execute(new GetChatMember(entry.getKey().toString(), usernameOrId));
                 if (member != null) {
-                    return "User found in group ID: " + groupId;
+                    groupList.add(entry.getValue());
                 }
             } catch (TelegramApiException e) {
-                // User not found in this group, continue to the next one
+                // Continue to the next group if user not found
             }
         }
-        return "User not found in any groups.";
+        if (!groupList.isEmpty()) {
+            for (String s : groupList) {
+                result.append(s).append(", ");
+            }
+            return result;
+        }
+        else
+            return new StringBuilder("User not found in any groups.");
     }
 
-    private void initializeGroupIds() {
-        groupIds = retrieveGroupIds();  // Fetch group IDs at initialization
-        System.out.println("Initialized group IDs: " + groupIds);
+    public void handleBotAddedToGroup(Long groupId, String groupName, Long addedByUserId) {
+        Optional<Group> byGroupId = groupRepository.findFirstByGroupId(String.valueOf(groupId));
+        if (byGroupId.isPresent()) {
+            Group group = byGroupId.get();
+            group.setDeleted(false);
+        }
+        else {
+            Group group = new Group();
+            group.setGroupId(String.valueOf(groupId));
+            group.setUsername("@"+groupName);
+            group.setUserId(String.valueOf(addedByUserId));
+            groupRepository.save(group);
+        }
     }
 
-    private List<Long> retrieveGroupIds() {
-        List<String> groupUsernames = Arrays.asList(
-                "@javaGrow"
-        );
+    public void handleBotRemovedFromGroup(Long groupId) {
+        Optional<Group> byGroupId = groupRepository.findFirstByGroupId(String.valueOf(groupId));
+        if (byGroupId.isPresent()) {
+            Group group = byGroupId.get();
+            group.setDeleted(true);
+        }
+    }
 
-        List<Long> ids = new ArrayList<>();
-        for (String username : groupUsernames) {
+    private HashMap<Long, String> getAllGroupIds() {
+        List<Group> all = groupRepository.findAllByDeletedIs(false);
+        HashMap<Long, String> ids = new HashMap<>();
+        for (Group group : all) {
             try {
-                Chat chat = botConfig.execute(new GetChat(username));
-                ids.add(chat.getId());
+                GetChat getChat = new GetChat(group.getUsername());
+                Long chatId = botConfig.execute(getChat).getId();
+                ids.put(chatId, group.getUsername());
             } catch (TelegramApiException e) {
-                System.err.println("Error retrieving group ID for username: " + username + ". " + e.getMessage());
+                System.err.println("Error retrieving group ID for: " + group.getUsername() + ". " + e.getMessage());
             }
         }
         return ids;

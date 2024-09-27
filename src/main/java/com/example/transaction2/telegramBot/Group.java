@@ -1,12 +1,16 @@
 package com.example.transaction2.telegramBot;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "groups")
 public class Group {
     @Id
@@ -21,6 +25,7 @@ public class Group {
     @LastModifiedDate
     private LocalDateTime updatedDate;
     private String username;
+    private Boolean deleted;
     private String groupId;
-
+    private String userId;
 }
