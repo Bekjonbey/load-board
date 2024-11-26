@@ -2,8 +2,9 @@
   "version": 2,
   "builds": [
     {
-      "src": "Dockerfile",
-      "use": "@vercel/docker"
+      "src": "src/main/java/**/*.java",
+      "use": "@vercel/java"
     }
   ]
 }
+
