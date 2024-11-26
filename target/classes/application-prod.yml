@@ -1,3 +1,23 @@
+server:
+  port: 8090
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 8899
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  file:
+    name: transaction.log
+
 jwt:
   access:
     key: 7#70OZn0#Dsaodi98BK8C1%T&hBnrzgqK28o
@@ -5,11 +25,3 @@ jwt:
   refresh:
     key: 7787dsa8dp7#%70OZ()BK8C1%Taskldjksal***
     expiration-time: 604800000
-logging:
-  file:
-    name: transaction.log
-
-
-spring:
-  main:
-    allow-circular-references: true
