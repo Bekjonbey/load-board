@@ -1,4 +1,4 @@
-package com.example.transaction2.telegramBot;
+package com.example.transaction2.telegramBot.component;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

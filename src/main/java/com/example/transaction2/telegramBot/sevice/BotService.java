@@ -1,30 +1,34 @@
-package com.example.transaction2.telegramBot;
+package com.example.transaction2.telegramBot.sevice;
 
+import com.example.transaction2.telegramBot.entity.Group;
+import com.example.transaction2.telegramBot.repository.GroupRepository;
+import com.example.transaction2.telegramBot.component.TelegramUpdateHandle;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChat;
 import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 public class BotService {
 
-    private final TelegramBotConfig botConfig;
+    private final TelegramUpdateHandle botConfig;
     private final GroupRepository groupRepository;
 
-    public BotService(TelegramBotConfig botConfig, GroupRepository groupRepository) {
+    public BotService(TelegramUpdateHandle botConfig, GroupRepository groupRepository) {
         this.botConfig = botConfig;
         this.groupRepository = groupRepository;
     }
 
-    public StringBuilder findGroupByUser(Long usernameOrId) {
+    public StringBuilder findGroupByUser(Long userId) {
         StringBuilder result = new StringBuilder();
         ArrayList<String> groupList = new ArrayList<>();
         for (Map.Entry<Long, String> entry : getAllGroupIds().entrySet()) {
             try {
-                ChatMember member = botConfig.execute(new GetChatMember(entry.getKey().toString(), usernameOrId));
+                ChatMember member = botConfig.execute(new GetChatMember(entry.getKey().toString(), userId));
                 if (member != null) {
                     groupList.add(entry.getValue());
                 }
@@ -36,7 +40,7 @@ public class BotService {
             for (String s : groupList) {
                 result.append(s).append(", ");
             }
-            return result;
+            return new StringBuilder("user found in these groups: " + result);
         }
         else
             return new StringBuilder("User not found in any groups.");
@@ -47,12 +51,16 @@ public class BotService {
         if (byGroupId.isPresent()) {
             Group group = byGroupId.get();
             group.setDeleted(false);
+            groupRepository.save(group);
         }
         else {
             Group group = new Group();
+            group.setCreatedDate(LocalDateTime.now());
+            group.setUpdatedDate(LocalDateTime.now());
             group.setGroupId(String.valueOf(groupId));
             group.setUsername("@"+groupName);
             group.setUserId(String.valueOf(addedByUserId));
+            group.setAddedToGroupByUser(String.valueOf(addedByUserId));
             groupRepository.save(group);
         }
     }
@@ -61,7 +69,9 @@ public class BotService {
         Optional<Group> byGroupId = groupRepository.findFirstByGroupId(String.valueOf(groupId));
         if (byGroupId.isPresent()) {
             Group group = byGroupId.get();
+            group.setUpdatedDate(LocalDateTime.now());
             group.setDeleted(true);
+            groupRepository.save(group);
         }
     }
 

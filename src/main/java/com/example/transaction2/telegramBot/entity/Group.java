@@ -1,4 +1,4 @@
-package com.example.transaction2.telegramBot;
+package com.example.transaction2.telegramBot.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -24,8 +24,9 @@ public class Group {
     @Column(name = "updated_date")
     @LastModifiedDate
     private LocalDateTime updatedDate;
-    private String username;
-    private Boolean deleted;
+    private String username; //groupUsername
+    private Boolean deleted = false;
     private String groupId;
     private String userId;
+    private String addedToGroupByUser;
 }
