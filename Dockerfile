@@ -6,3 +6,4 @@ FROM openjdk:17.0.1-jdk-slim
 COPY --from=build /target/load-board-0.0.1-SNAPSHOT.jar load-board.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","load-board.jar"]
+
