@@ -13,3 +13,10 @@ logging:
 spring:
   main:
     allow-circular-references: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 8899
+  jpa:
+    hibernate:
+      ddl-auto: update
