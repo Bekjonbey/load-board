@@ -65,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
         if(signDTO.getPosition().equalsIgnoreCase("USER")) {
             Role role = roleRepository.findByName(RoleEnum.USER.name())
                     .orElseThrow(() -> RestException.restThrow("ROLE_NOT_FOUND", HttpStatus.BAD_REQUEST));
+            role.setName("CALCULATE");
             user.setRole(role);
         }
         else if(signDTO.getPosition().equalsIgnoreCase("COMPANY")) {

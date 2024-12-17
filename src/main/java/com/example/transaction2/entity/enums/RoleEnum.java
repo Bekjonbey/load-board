@@ -5,5 +5,6 @@ public enum RoleEnum {
     ADMIN,
     DRIVER,
     COMPANY,
+    CALCULATE,
     OTHER
 }
