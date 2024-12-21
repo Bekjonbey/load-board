@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,16 +35,6 @@ public class ExceptionHelper {
             errors.add(new ErrorData(errorMessage, HttpStatus.BAD_REQUEST.value(), fieldError.getField()));
         });
         return new ResponseEntity<>(ApiResult.errorResponse(errors), HttpStatus.BAD_REQUEST);
-    }
-
-
-
-    @ExceptionHandler(value = {AccessDeniedException.class})
-    public ResponseEntity<?> handleException(AccessDeniedException ex) {
-        ex.printStackTrace();
-        return new ResponseEntity<>(
-                ApiResult.errorResponse("Bu yo'lga kirishga huquq yo'q", 403),
-                HttpStatus.FORBIDDEN);
     }
 
 }
