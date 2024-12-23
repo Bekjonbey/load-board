@@ -38,14 +38,16 @@ public class NewsService {
     }
 
     public List<NewsDto> getAll(GetNewsFilterParam request) {
-        return newsRepository.findAll(getNewsSpecification(request))
-                .stream()
-                .map(NewsDto::new)
-                .toList();
+        List<NewsDto> res = new ArrayList<>();
+        List<News> all = newsRepository.findAll(getNewsSpecification(request));
+        for (News news : all) {
+            res.add(new NewsDto(news, request.getLang()));
+        }
+        return res;
     }
 
-    public NewsDto get(Long id) {
-        return new NewsDto(newsRepository.findById(id).get());
+    public NewsDto get(Long id, String lang) {
+        return new NewsDto(newsRepository.findById(id).get(), lang);
     }
 
     private Specification<News> getNewsSpecification(GetNewsFilterParam request) {
@@ -58,6 +60,10 @@ public class NewsService {
 
             if (Objects.nonNull(request.getLocationType())) {
                 predicates.add(criteriaBuilder.equal(root.get("locationType"), request.getLocationType()));
+            }
+
+            if (Objects.nonNull(request.getContentType())) {
+                predicates.add(criteriaBuilder.equal(root.get("contentType"), request.getContentType()));
             }
 
             return criteriaBuilder.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));

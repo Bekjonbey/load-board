@@ -18,6 +18,11 @@ public class NewsCreateDto {
     private String descriptionRu;
     private String descriptionEng;
     private String descriptionUz;
+    private String startAmount;
+    private String countPeople;
+    private String country;
+    private String period;
+    private ContentType contentType;
     private PageEnum page;
     private LocationType locationType;
 }

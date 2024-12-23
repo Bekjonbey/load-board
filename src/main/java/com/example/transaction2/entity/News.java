@@ -1,5 +1,6 @@
 package com.example.transaction2.entity;
 
+import com.example.transaction2.payload.ContentType;
 import com.example.transaction2.payload.NewsCreateDto;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -26,6 +27,11 @@ public class News {
     private String descriptionRu;
     private String descriptionEng;
     private String descriptionUz;
+    private String startAmount;
+    private String countPeople;
+    private String country;
+    private String period;
+    private ContentType contentType;
     private PageEnum page;
     private LocationType locationType;
     @Lob
@@ -36,7 +42,16 @@ public class News {
 
     public News(NewsCreateDto loadAddDTO, MultipartFile photo) throws IOException {
         this.titleUz = loadAddDTO.getTitleUz();
+        this.titleRu = loadAddDTO.getTitleRu();
+        this.titleEng = loadAddDTO.getTitleEng();
         this.descriptionUz = loadAddDTO.getDescriptionUz();
+        this.descriptionRu = loadAddDTO.getDescriptionRu();
+        this.descriptionEng = loadAddDTO.getDescriptionUz();
+        this.startAmount = loadAddDTO.getStartAmount();
+        this.countPeople = loadAddDTO.getCountPeople();
+        this.country = loadAddDTO.getCountry();
+        this.period = loadAddDTO.getPeriod();
+        this.contentType = loadAddDTO.getContentType();
         this.page = loadAddDTO.getPage();
         this.locationType = loadAddDTO.getLocationType();
         this.photo = photo.getBytes();

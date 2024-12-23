@@ -8,4 +8,6 @@ import lombok.Data;
 public class GetNewsFilterParam {
     private PageEnum page;
     private LocationType locationType;
+    private String lang;
+    private ContentType contentType;
 }

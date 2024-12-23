@@ -5,7 +5,9 @@ import com.example.transaction2.payload.NewsCreateDto;
 import com.example.transaction2.payload.NewsDto;
 import com.example.transaction2.payload.StringResponse;
 import com.example.transaction2.service.NewsService;
+import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +23,7 @@ public class NewsController {
     @PostMapping("/add")
     public StringResponse addNews(@RequestHeader("key") UUID key, @RequestParam NewsCreateDto loadAddDTO,
                                   @RequestParam("photo") MultipartFile photo) {
-        return newsService.add(loadAddDTO,key,photo);
+        return newsService.add(loadAddDTO, key, photo);
     }
 
     @PostMapping("/all")
@@ -30,8 +32,8 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public NewsDto get(@PathVariable Long id) {
-        return newsService.get(id);
+    public NewsDto get(@PathVariable Long id, @QueryParam("lang") String lang) {
+        return newsService.get(id, lang);
     }
 
     @DeleteMapping("/{id}")
