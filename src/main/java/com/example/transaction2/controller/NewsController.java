@@ -32,7 +32,7 @@ public class NewsController {
     }
 
     @GetMapping("/{id}")
-    public NewsDto get(@PathVariable Long id, @QueryParam("lang") String lang) {
+    public NewsDto get(@PathVariable Long id, @RequestParam("lang") String lang) {
         return newsService.get(id, lang);
     }
 
