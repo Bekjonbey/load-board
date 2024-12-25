@@ -1,5 +1,6 @@
 package com.example.transaction2.controller;
 
+import com.example.transaction2.entity.Admin;
 import com.example.transaction2.payload.AdminLoginDto;
 import com.example.transaction2.payload.NewsCreateDto;
 import com.example.transaction2.payload.NewsDto;
@@ -24,9 +25,10 @@ public class AdminController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AdminLoginDto adminLoginDto) {
-        if (adminService.login(adminLoginDto))
-            return ResponseEntity.ok("login success");
-        else
+        Admin login = adminService.login(adminLoginDto);
+        if (login != null) {
+            return ResponseEntity.ok(login.getKey().toString());
+        } else
             return ResponseEntity.ok("login failed");
     }
 }
