@@ -24,7 +24,7 @@ public class ProposalController {
     }
 
     @PostMapping("/update")
-    public StringResponse update(@RequestHeader("key") UUID key, @RequestParam ProposalUpdateDto request) {
+    public StringResponse update(@RequestParam("key") UUID key, @RequestBody ProposalUpdateDto request) {
         return proposalService.update(request, key);
     }
 

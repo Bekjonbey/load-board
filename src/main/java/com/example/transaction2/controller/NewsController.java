@@ -8,6 +8,7 @@ import com.example.transaction2.service.NewsService;
 import jakarta.ws.rs.QueryParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,14 +16,14 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/load")
+@RequestMapping("/api/news")
 @RequiredArgsConstructor
 public class NewsController {
     private final NewsService newsService;
 
-    @PostMapping("/add")
-    public StringResponse addNews(@RequestHeader("key") UUID key, @RequestParam NewsCreateDto loadAddDTO,
-                                  @RequestParam("photo") MultipartFile photo) {
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public StringResponse addNews(@RequestParam("key") UUID key, @RequestPart NewsCreateDto loadAddDTO,
+                                  @RequestPart("photo") MultipartFile photo) {
         return newsService.add(loadAddDTO, key, photo);
     }
 
