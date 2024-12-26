@@ -2,11 +2,11 @@ package com.example.transaction2.entity;
 
 public enum PageEnum {
     HOMEPAGE,
-    SOCIAL_MEDIA,
+    TOUR_PACKAGE,
+    DESTINATIONS,
+    ABOUT,
     FAQS,
     CONTACTS,
-    ABOUT,
     BLOG,
-    TOURS,
-    DESTINATIONS
+    TOURS
 }
